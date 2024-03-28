@@ -1,11 +1,12 @@
 <?php
 
 namespace Database\Seeders;
-
+use Illuminate\Support\Facades\DB;
 use App\Models\Mahasiswa;
 use App\Models\Wali;
-use App\Models\Dosen; // tambahkan penggunaan namespace model Dosen
-use DB;
+use App\Models\Hobi;
+use App\Models\Dosen;
+
 use Illuminate\Database\Seeder;
 
 class RelasiSeeder extends Seeder
@@ -14,14 +15,18 @@ class RelasiSeeder extends Seeder
     {
         DB::table('mahasiswas')->delete();
         DB::table('walis')->delete();
-        DB::table('dosens')->delete(); // ubah titik dua (:) menjadi arrow operator (::)
+        DB::table('dosens')->delete(); 
 
-        $dosen = Dosen::create(array( // tambahkan namespace pada model Dosen
+        #siapkan seeder hobi disini
+        DB::table('hobis')->delete();
+        DB::table('mahasiswa_hobi')->delete();
+
+        // Buat sample 3 mahasiswa
+        $dosen = Dosen::create(array( 
             'nama' => 'Eko',
             'nipd' => '1234567890',
         ));
 
-        // Buat sample 3 mahasiswa
         $ani = Mahasiswa::create(array(
             'nama' => 'Ani',
             'nim' => 'D015015072',
@@ -39,6 +44,15 @@ class RelasiSeeder extends Seeder
             'nim' => 'D015015078',
             'id_dosen' => $dosen->id,
         ));
+
+        #isi tabel hobi
+        $menulis = Hobi::create(array('hobi' => 'Menulis'));
+        $baca_buku = Hobi::create(array('hobi' => 'Baca Buku'));
+
+        #hubungkan mahasiswa dengan hobinya masing2
+        $ani->hobi()->attach($menulis->id);
+        $budi->hobi()->attach($baca_buku->id);
+        $nia->hobi()->attach($menulis->id);
 
         // Informasi ketika Mahasiswa diisi
         $this->command->info('Mahasiswa telah diisi!');
@@ -59,6 +73,6 @@ class RelasiSeeder extends Seeder
             'id_mahasiswa' => $nia->id,
         ));
         
-        $this->command->info('Data Mahasiswa dosen                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   dan Wali telah diisi!');
+        $this->command->info('Data Mahasiswa dosen dan Wali telah diisi!');
     }
 }

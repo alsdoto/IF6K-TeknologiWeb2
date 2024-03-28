@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MahasiswaController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -43,3 +46,31 @@ Route::get('relasi-3', function () {
 
     }
 });
+
+//relasi many to many
+Route::get('relasi-4', function () {
+    #bila kita ingin melihat hobi saya
+    $ani = App\Models\Mahasiswa::where('nama', '=', 'Ani')->first();
+
+    #tampilkan seluruh hobi si ani
+    foreach ($ani->hobi as $temp) {
+        echo '<li>'. $temp->hobi. '</li>';
+    }
+});
+
+Route::get('relasi-5', function () {
+    #temukan hobi menulis
+    $menulis = App\Models\Hobi::where('hobi', '=', 'Menulis')->first();
+
+    #tampilkan semua mahasiswa yang mempunyai hobi menulis
+    foreach ($menulis->mahasiswa as $temp) {
+        echo '<li> Nama : '.$temp->nama.', Nim : <strong>' .$temp->nim.'</strong></li>';
+    }
+});
+
+Route::get('/mahasiswa', function () {
+    $mahasiswas = App\Models\Mahasiswa::all();
+    return view('index', ['mahasiswas' => $mahasiswas]);
+});
+
+
